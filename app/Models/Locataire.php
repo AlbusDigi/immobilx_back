@@ -12,13 +12,21 @@ class Locataire extends Model
     protected $fillable = [
         'user_id',
         'profession',
-        'etatCivil',
-        'pieceIdentite',
+        'marital_status',
+        'residence_address',
+        'date_of_birth',
+        'place_of_birth',
+        'identity_document',
+        'document_issued_date',
+        'document_issued_by',
+        'emergency_phone',
+        'guarantor_name',
+        'guarantor_phone',
+        'created_at',
     ];
 
-    // Relation inverse un-à-un vers le modèle Utilisateur
-    public function utilisateur()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 }

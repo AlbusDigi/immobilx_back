@@ -4,20 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Bailleur extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
         'rccm',
         'nif',
+        'type',
+        'address',
+        'description',
+        'legal_name',
+        'head_office_address',
+        'legal_form',
+        'registration_date',
+        'legal_contact',
+        'property_insurance',
     ];
 
-    // Relation inverse un-à-un vers le modèle Utilisateur
-    public function users()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 }
