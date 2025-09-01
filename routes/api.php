@@ -1,16 +1,8 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Routes publiques (sans authentification)
-|--------------------------------------------------------------------------
-| Ces routes sont accessibles à tous les utilisateurs.
-*/
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +25,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     
 });
+
+
+require __DIR__.'/auth.php';
