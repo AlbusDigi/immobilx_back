@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/register/bailleur', [RegisteredUserController::class, 'bailleurRegister']);
+Route::post('/register/bailleur/locataire', [RegisteredUserController::class, 'locataireRegister']);
     
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
