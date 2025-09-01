@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BailleurResource;
+use App\Http\Resources\ConciergeResource;
 use App\Http\Resources\LocataireResource;
 use App\Models\Bailleur;
 use App\Models\Concierge;
@@ -91,8 +92,8 @@ class RegisteredUserController extends Controller
     public function locataireRegister(Request $request)
     {
         try {
-            $user  = auth()->user();
-            if(!$user){
+            $user = auth()->user();
+            if (!$user) {
                 return response()->json(['message' => 'Unauthorized'], 401);
             }
             $validator = Validator::make($request->all(), [
@@ -148,6 +149,71 @@ class RegisteredUserController extends Controller
                 'message' => 'Locataire registered successfully',
                 'user' => $user,
                 'locataire' => new LocataireResource($locataire),
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function conciergeRegister(Request $request)
+    {
+        try {
+            $user = auth()->user();
+
+            if(!$user){
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+
+            $validator = Validator::make($request->all(), [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'email', 'unique:users'],
+                'password' => ['required', 'string', 'confirmed', 'min:8'],
+                'telephone' => ['required', 'string', 'unique:users'],
+
+                'residence_address' => ['required', 'string'],
+                'managed_housing_count' => ['required', 'integer'],
+                'salary' => ['required', 'numeric'],
+                'hire_date' => ['required', 'date'],
+                'contract_end_date' => ['nullable', 'date'],
+                'social_security_number' => ['required', 'string'],
+                'contract_type' => ['required', 'string'],
+                'employment_status' => ['required', 'in:active,suspended,terminated'],
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+
+            $data = $validator->validated();
+
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'telephone' => $data['telephone'],
+            ]);
+
+            $user->assignRole('Concierge');
+
+            $concierge = Concierge::create([
+                'user_id' => $user->id,
+                'residence_address' => $data['residence_address'],
+                'managed_housing_count' => $data['managed_housing_count'],
+                'salary' => $data['salary'],
+                'hire_date' => $data['hire_date'],
+                'contract_end_date' => $data['contract_end_date'] ?? null,
+                'social_security_number' => $data['social_security_number'],
+                'contract_type' => $data['contract_type'],
+                'employment_status' => $data['employment_status'],
+            ]);
+
+            return response()->json([
+                'message' => 'Concierge registered successfully',
+                'user' => $user,
+                'concierge' => new ConciergeResource($concierge),
             ], 201);
 
         } catch (\Exception $e) {

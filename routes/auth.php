@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/register/bailleur', [RegisteredUserController::class, 'bailleurRegister']);
-Route::post('/register/bailleur/locataire', [RegisteredUserController::class, 'locataireRegister']);
-    
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/register/bailleur/locataire', [RegisteredUserController::class, 'locataireRegister']);
+    Route::post('/register/bailleur/concierge', [RegisteredUserController::class, 'conciergeRegister']);
+});
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->middleware('guest')
