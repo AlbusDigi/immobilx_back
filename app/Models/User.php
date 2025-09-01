@@ -59,4 +59,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Bailleur::class, 'user_id');
     }
+
+    public function concierge()
+    {
+        return $this->hasOne(Concierge::class, 'user_id');
+    }
 }
