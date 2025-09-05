@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Bailleur\LogementController;
 use App\Http\Controllers\Bailleur\ParcelleController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
@@ -27,6 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //parcelles routes
     Route::apiResource('/parcelles', ParcelleController::class);
+
+    //logements routes
+    Route::apiResource('/logements', LogementController::class);
 
 
 });
