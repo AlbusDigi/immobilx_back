@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Resources\Bailleur;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class LogementResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'parcelle' => new ParcelleResource($this->parcelle),         // lien avec la parcelle
+            'name' => $this->name,
+            'address' => $this->address,
+            'floor' => $this->floor,
+            'rooms' => $this->rooms,
+            'living_area' => $this->living_area,
+            'construction_year' => $this->construction_year,
+            'equipments' => $this->equipments,
+            'rent' => $this->rent,
+            'charges' => $this->charges,
+            'deposit' => $this->deposit,
+            'availability' => $this->availability,
+            'state' => $this->state,
+            'internal_rules' => $this->internal_rules,
+            'note' => $this->note,
+        ];
+    }
+}

@@ -44,4 +44,8 @@ class Parcelle extends Model
         return $this->belongsTo(Bailleur::class);
     }
 
+    public function logements(){
+        return $this->hasMany(Logement::class);
+    }
+
 }
