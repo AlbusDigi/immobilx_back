@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call([
             RolesSeeder::class, // Assurez-vous que RolesSeeder est exécuté en premier
-            UserSeeder::class
+            UserSeeder::class,
+            ParcelleSeeder::class
         ]);
     }
 }
