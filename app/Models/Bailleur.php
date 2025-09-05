@@ -29,4 +29,9 @@ class Bailleur extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function parcelles()
+    {
+        return $this->hasMany(Parcelle::class);
+    }
 }

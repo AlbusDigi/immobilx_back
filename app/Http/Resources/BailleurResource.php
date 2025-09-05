@@ -11,6 +11,7 @@ class BailleurResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user' => new UserResource($this->user),
             'rccm' => $this->rccm,
             'nif' => $this->nif,
             'type' => $this->type,
