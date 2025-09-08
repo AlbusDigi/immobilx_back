@@ -15,15 +15,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'telephone' => $this->telephone,
             'created_at' => $this->created_at,
-            'role' => $this->getRoleNames()->first(), // Récupère le rôle de Spatie
-
-            // Charge conditionnellement les informations de profil spécifiques au rôle
-            'locataire' => $this->when($this->hasRole('Locataire'), function () {
-                return new LocataireResource($this->locataire);
-            }),
-            'bailleur' => $this->when($this->hasRole('Bailleur'), function () {
-                return new BailleurResource($this->bailleur);
-            }),
+            'role' => $this->getRoleNames()->first(),
         ];
     }
 }

@@ -17,7 +17,7 @@ class ParcelleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'bailleur_id' => new BailleurResource($this->bailleur),
+            'bailleur' => new BailleurResource($this->bailleur),
             'name' => $this->name,
             'address' => $this->address,
             'area' => $this->area,

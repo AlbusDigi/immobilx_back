@@ -18,11 +18,21 @@ class ParcelleController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $bailleur = $user->bailleur;
-        if (!$bailleur) return response()->json(['message' => 'Unauthorized'], 401);
 
-        $query = Parcelle::where('bailleur_id', $bailleur->id);
+        // Si ADMIN → toutes les parcelles
+        if ($user->hasRole('Admin')) {
+            $query = Parcelle::query();
+        }
+        // Sinon → bailleur uniquement
+        else {
+            $bailleur = $user->bailleur;
+            if (!$bailleur) {
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+            $query = Parcelle::where('bailleur_id', $bailleur->id);
+        }
 
+        // Recherche
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -38,6 +48,7 @@ class ParcelleController extends Controller
         return ParcelleResource::collection($parcelles);
     }
 
+
     /**
      * Store a newly created resource in storage.
      */
@@ -45,12 +56,15 @@ class ParcelleController extends Controller
     {
         $user = auth()->user();
         $bailleur = $user->bailleur;
-        if (!$bailleur) return response()->json(['message' => 'Unauthorized'], 401);
+        if (!$bailleur)
+            return response()->json(['message' => 'Unauthorized'], 401);
 
         // Validation initiale
         $validator = Validator::make($request->all(), [
             'name' => [
-                'required','string','max:255',
+                'required',
+                'string',
+                'max:255',
                 Rule::unique('parcelles')->where(function ($query) use ($bailleur) {
                     return $query->where('bailleur_id', $bailleur->id)
                         ->whereNull('deleted_at');
@@ -60,11 +74,15 @@ class ParcelleController extends Controller
             'area' => 'nullable|numeric',
             'internal_rules' => 'nullable|string',
             'cadastral_number' => [
-                'nullable','string','max:255',
+                'nullable',
+                'string',
+                'max:255',
                 Rule::unique('parcelles')->whereNull('deleted_at')
             ],
             'land_title_number' => [
-                'nullable','string','max:255',
+                'nullable',
+                'string',
+                'max:255',
                 Rule::unique('parcelles')->whereNull('deleted_at')
             ],
             'land_title_date' => 'nullable|date',
@@ -77,7 +95,8 @@ class ParcelleController extends Controller
             'status' => 'nullable|in:active,blocked,pending',
         ]);
 
-        if ($validator->fails()) return response()->json($validator->errors(), 422);
+        if ($validator->fails())
+            return response()->json($validator->errors(), 422);
 
         $data = $validator->validated();
         $data['bailleur_id'] = $bailleur->id;
@@ -106,10 +125,12 @@ class ParcelleController extends Controller
     {
         $user = auth()->user();
         $bailleur = $user->bailleur;
-        if (!$bailleur) return response()->json(['message' => 'Unauthorized'], 401);
+        if (!$bailleur)
+            return response()->json(['message' => 'Unauthorized'], 401);
 
         $parcelle = Parcelle::where('bailleur_id', $bailleur->id)->find($id);
-        if (!$parcelle) return response()->json(['message' => 'Parcel not found'], 404);
+        if (!$parcelle)
+            return response()->json(['message' => 'Parcel not found'], 404);
 
         return new ParcelleResource($parcelle);
     }
@@ -121,14 +142,18 @@ class ParcelleController extends Controller
     {
         $user = auth()->user();
         $bailleur = $user->bailleur;
-        if (!$bailleur) return response()->json(['message' => 'Unauthorized'], 401);
+        if (!$bailleur)
+            return response()->json(['message' => 'Unauthorized'], 401);
 
         $parcelle = Parcelle::where('bailleur_id', $bailleur->id)->find($id);
-        if (!$parcelle) return response()->json(['message' => 'Parcel not found'], 404);
+        if (!$parcelle)
+            return response()->json(['message' => 'Parcel not found'], 404);
 
         $validator = Validator::make($request->all(), [
             'name' => [
-                'sometimes','string','max:255',
+                'sometimes',
+                'string',
+                'max:255',
                 Rule::unique('parcelles')->ignore($parcelle->id)->where(function ($query) use ($bailleur) {
                     return $query->where('bailleur_id', $bailleur->id)
                         ->whereNull('deleted_at');
@@ -138,11 +163,15 @@ class ParcelleController extends Controller
             'area' => 'nullable|numeric',
             'internal_rules' => 'nullable|string',
             'cadastral_number' => [
-                'nullable','string','max:255',
+                'nullable',
+                'string',
+                'max:255',
                 Rule::unique('parcelles')->ignore($parcelle->id)->whereNull('deleted_at')
             ],
             'land_title_number' => [
-                'nullable','string','max:255',
+                'nullable',
+                'string',
+                'max:255',
                 Rule::unique('parcelles')->ignore($parcelle->id)->whereNull('deleted_at')
             ],
             'land_title_date' => 'nullable|date',
@@ -155,7 +184,8 @@ class ParcelleController extends Controller
             'status' => 'nullable|in:active,blocked,pending',
         ]);
 
-        if ($validator->fails()) return response()->json($validator->errors(), 422);
+        if ($validator->fails())
+            return response()->json($validator->errors(), 422);
 
         $parcelle->update($validator->validated());
 
@@ -169,10 +199,12 @@ class ParcelleController extends Controller
     {
         $user = auth()->user();
         $bailleur = $user->bailleur;
-        if (!$bailleur) return response()->json(['message' => 'Unauthorized'], 401);
+        if (!$bailleur)
+            return response()->json(['message' => 'Unauthorized'], 401);
 
         $parcelle = Parcelle::where('bailleur_id', $bailleur->id)->find($id);
-        if (!$parcelle) return response()->json(['message' => 'Parcel not found'], 404);
+        if (!$parcelle)
+            return response()->json(['message' => 'Parcel not found'], 404);
 
         $parcelle->delete();
 
