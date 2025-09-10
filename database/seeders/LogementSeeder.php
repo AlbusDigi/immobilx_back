@@ -31,7 +31,7 @@ class LogementSeeder extends Seeder
                     'charges' => rand(20, 200),
                     'deposit' => rand(200, 1500),
                     'availability' => ['available','occupied','maintenance'][rand(0,2)],
-                    'status' => 'active',
+                    'state' => 'active',
                     'internal_rules' => 'Pas de bruit après 22h',
                     'note' => 'Généré automatiquement',
                 ]);
