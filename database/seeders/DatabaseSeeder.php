@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ParcelleSeeder::class,
             LogementSeeder::class,
+            ContratSeeder::class,
         ]);
     }
 }
