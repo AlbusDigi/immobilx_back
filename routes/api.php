@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Bailleur\LogementController;
 use App\Http\Controllers\Bailleur\ParcelleController;
+use App\Http\Controllers\Contrat\ContratController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //logements routes
     Route::apiResource('/logements', LogementController::class);
+    // Gestion des contrat
+    Route::apiResource('/contrats', ContratController::class);
 
 
 });

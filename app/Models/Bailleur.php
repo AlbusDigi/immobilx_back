@@ -34,4 +34,10 @@ class Bailleur extends Model
     {
         return $this->hasMany(Parcelle::class);
     }
+    public function contrats()
+    {
+        return $this->hasMany(Contrat::class, 'bailleur_id');
+    }
+
+
 }

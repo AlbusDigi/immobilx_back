@@ -35,7 +35,7 @@ class ParcelleSeeder extends Seeder
                 'construction_year' => rand(1990, 2025),
                 'urban_zone' => ['residential','commercial','industrial','mixed','agricultural','protected'][rand(0,5)],
                 'note' => 'Parcelle générée automatiquement',
-                'status' => 'active',
+                'state' => 'active',
             ]);
         }
 
