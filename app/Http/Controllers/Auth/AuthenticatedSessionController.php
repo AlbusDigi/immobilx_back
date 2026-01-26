@@ -21,27 +21,26 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): AuthLoginResource | JsonResponse
     {
         try {
-            // Recherche de l'utilisateur par son adresse email
-        $user = User::where('email', '=', $request->validated('email'))->first();
+            $request->authenticate();
 
-        // Vérifie si l'utilisateur existe et si le mot de passe est correct
-        if (!($user instanceof User) || !Hash::check($request->validated('password'), $user->password)) {
-            // Si l'utilisateur n'existe pas ou le mot de passe est incorrect, on retourne une erreur 401
-            return response()->json(['message' => 'Email ou mot de passe incorrect'], 401);
-        }
+            $user = User::where('email', $request->email)->first();
 
-        // Génération d’un token d’authentification via Laravel Sanctum
-        $token = $user->createToken($user->email)->plainTextToken;
+            // Génération d’un token d’authentification via Laravel Sanctum
+            $token = $user->createToken($user->email)->plainTextToken;
 
-        // Ajoute manuellement le token dans l’objet utilisateur (pour pouvoir l'envoyer dans la ressource)
-        $user->token = $token;
+            // Ajoute manuellement le token dans l’objet utilisateur
+            $user->token = $token;
 
-        // Retourne la ressource contenant les infos utilisateur + token
-        return new AuthLoginResource($user);
+            return new AuthLoginResource($user);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Email ou mot de passe incorrect',
+                'errors' => $e->errors(),
+            ], 422);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            $message = config('app.debug') ? $e->getMessage() : 'Une erreur est survenue lors de la connexion.';
+            return response()->json(['message' => $message], 500);
         }
-
     }
 
     /**

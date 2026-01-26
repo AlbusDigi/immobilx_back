@@ -15,6 +15,7 @@ class LogementResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'parcelle' => new ParcelleResource($this->parcelle),         // lien avec la parcelle
             'name' => $this->name,
             'floor' => $this->floor,

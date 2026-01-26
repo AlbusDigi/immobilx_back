@@ -92,7 +92,7 @@ class ParcelleController extends Controller
             'construction_year' => 'nullable|digits:4',
             'urban_zone' => 'nullable|in:residential,commercial,industrial,mixed,agricultural,protected',
             'note' => 'nullable|string',
-            'status' => 'nullable|in:active,blocked,pending',
+            'state' => 'nullable|in:active,blocked,pending',
         ]);
 
         if ($validator->fails())
@@ -100,7 +100,7 @@ class ParcelleController extends Controller
 
         $data = $validator->validated();
         $data['bailleur_id'] = $bailleur->id;
-        $data['status'] = 'active'; // activée par défaut
+        $data['state'] = 'active'; // activée par défaut
 
         try {
             $parcelle = Parcelle::create($data);
@@ -181,7 +181,7 @@ class ParcelleController extends Controller
             'construction_year' => 'nullable|digits:4',
             'urban_zone' => 'nullable|in:residential,commercial,industrial,mixed,agricultural,protected',
             'note' => 'nullable|string',
-            'status' => 'nullable|in:active,blocked,pending',
+            'state' => 'nullable|in:active,blocked,pending',
         ]);
 
         if ($validator->fails())
