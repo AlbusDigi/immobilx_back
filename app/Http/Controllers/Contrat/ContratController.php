@@ -39,7 +39,19 @@ class ContratController extends Controller
 
         $request->validate([
             'locataire_id' => 'required|exists:locataires,id',
-            'logement_id' => 'required|exists:logements,id',
+            'logement_id' => [
+                'required',
+                'exists:logements,id',
+                function ($attribute, $value, $fail) use ($user) {
+                    $exists = \App\Models\Logement::where('id', $value)
+                        ->whereHas('parcelle', function ($query) use ($user) {
+                            $query->where('bailleur_id', $user->bailleur->id);
+                        })->exists();
+                    if (!$exists) {
+                        $fail('The selected logement is invalid or does not belong to you.');
+                    }
+                },
+            ],
             'dateDebut' => 'required|date',
             'dateFin' => 'required|date|after:dateDebut',
             'caution' => 'nullable|numeric',
@@ -84,7 +96,19 @@ class ContratController extends Controller
 
         $request->validate([
             'locataire_id' => 'required|exists:locataires,id',
-            'logement_id' => 'required|exists:logements,id',
+            'logement_id' => [
+                'required',
+                'exists:logements,id',
+                function ($attribute, $value, $fail) use ($user) {
+                    $exists = \App\Models\Logement::where('id', $value)
+                        ->whereHas('parcelle', function ($query) use ($user) {
+                            $query->where('bailleur_id', $user->bailleur->id);
+                        })->exists();
+                    if (!$exists) {
+                        $fail('The selected logement is invalid or does not belong to you.');
+                    }
+                },
+            ],
             'dateDebut' => 'required|date',
             'dateFin' => 'required|date|after:dateDebut',
             'caution' => 'nullable|numeric',

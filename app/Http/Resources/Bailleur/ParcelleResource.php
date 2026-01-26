@@ -31,6 +31,7 @@ class ParcelleResource extends JsonResource
             'construction_year' => $this->construction_year,
             'urban_zone' => $this->urban_zone,
             'note' => $this->note,
+            'state' => $this->state,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

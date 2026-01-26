@@ -10,8 +10,8 @@ test('users can authenticate using the login screen', function () {
         'password' => 'password',
     ]);
 
-    $this->assertAuthenticated();
-    $response->assertNoContent();
+    $response->assertOk();
+    $response->assertJsonStructure(['data' => ['id', 'name', 'email', 'token']]);
 });
 
 test('users can not authenticate with invalid password', function () {
@@ -27,9 +27,10 @@ test('users can not authenticate with invalid password', function () {
 
 test('users can logout', function () {
     $user = User::factory()->create();
+    $token = $user->createToken('test')->plainTextToken;
 
-    $response = $this->actingAs($user)->post('/logout');
+    $response = $this->withHeader('Authorization', 'Bearer '.$token)->post('/logout');
 
-    $this->assertGuest();
-    $response->assertNoContent();
+    $response->assertOk();
+    $response->assertJson(['logout' => true]);
 });
